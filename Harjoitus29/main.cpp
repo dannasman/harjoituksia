@@ -14,7 +14,7 @@ int KysyValinta();
 
 int main()
 {
-    PUH kontakti;
+    PUH kontakti, sukunimi;
     fstream lista;
     int vastaus;
     lista.open("/home/dannasman/Documents/C++/Harjoitus29/lista.dat",
@@ -82,6 +82,31 @@ int main()
             lista.read(kontakti.suku, sizeof kontakti.suku);
             cout << kontakti.nmro << " " << kontakti.etu << " " << kontakti.suku << endl;
             break;
+        case 5: if(!lista.is_open())
+            {
+                cout << "Luo lista ensin" << endl;
+                break;
+            }
+            lista.clear();
+            lista.seekg(-(1 * sizeof kontakti), ios_base::end);
+            cout << "Syötä sukunimi: " << endl;
+            cin >> sukunimi.suku;
+
+            while(!lista.tellg() == alku)
+            {
+                lista.read(kontakti.nmro, sizeof kontakti.nmro);
+                lista.read(kontakti.etu, sizeof kontakti.etu);
+                lista.read(kontakti.suku, sizeof kontakti.suku);
+                if(*kontakti.suku == *sukunimi.suku)
+                {
+                    cout << kontakti.nmro << " " << kontakti.etu << " " << kontakti.suku << endl;
+                    break;
+                }
+                lista.seekg(-(2 * sizeof kontakti), ios_base::cur);
+            }
+            if(*kontakti.suku != *sukunimi.suku)
+                cout << "Sukunimeä ei löytynyt" << endl;
+            break;
         }
         vastaus = KysyValinta();
     }
@@ -95,9 +120,10 @@ int KysyValinta()
     int valinta;
     cout << "\nVALIKKO" << endl;
     cout << "1) Luo lista" << endl;
-    cout << "2) Lisä uusi numero" << endl;
+    cout << "2) Lisää uusi numero" << endl;
     cout << "3) Selaa numeroita alusta lähtien" << endl;
     cout << "4) Selaa numeroita lopusta lähtien" << endl;
+    cout << "5) Etsi sukunimen perusteella" << endl;
     cout << "0) Lopetus" << endl;
     cin >> valinta;
     return valinta;
